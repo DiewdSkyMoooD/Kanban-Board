@@ -9,13 +9,12 @@ export class KanbanBoard implements OnInit {
   tasks: Task[];
   stagesNames: string[];
   stagesTasks: any[]; //Only used for rendering purpose
-
   ngOnInit() {
     // Each task is uniquely identified by its name. 
     // Therefore, when you perform any operation on tasks, make sure you pick tasks by names (primary key) instead of any kind of index or any other attribute.
     this.tasks = [
-      { name: '0', stage: 0 },
-      { name: '1', stage: 0 },
+      { name: 'task 0', stage: 0 },
+      { name: 'task 1', stage: 0 },
     ];
     this.stagesNames = ['Backlog', 'To Do', 'Ongoing', 'Done'];
     this.configureTasksForRendering();
@@ -35,6 +34,36 @@ export class KanbanBoard implements OnInit {
 
   generateTestId = (name) => {
     return name.split(' ').join('-');
+  } 
+
+  addTask=(task)=>{
+    if (task.value==="")return;
+    this.tasks.push({name:task.value,stage:0})
+    task.value="";
+    this.configureTasksForRendering()
+  }
+
+  next=(task,stage)=>{
+    for(let i=0; i <this.tasks.length;i++){
+      if(stage===3)return;
+      if(task===this.tasks[i].name)this.tasks.splice(i,1,{name:task,stage:stage+1});
+    }
+    this.configureTasksForRendering()
+  }
+
+  back=(task,stage)=>{
+    for(let i=0; i <this.tasks.length;i++){
+      if(stage===0)return;
+      if(task===this.tasks[i].name)this.tasks.splice(i,1,{name:task,stage:stage-1});
+    }
+    this.configureTasksForRendering()
+  }
+
+  delete=(task)=>{
+    for(let i=0; i <this.tasks.length;i++){
+      if(task===this.tasks[i].name) this.tasks.splice(i,1);
+    }
+    this.configureTasksForRendering()
   }
 }
 
